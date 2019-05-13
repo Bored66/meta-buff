@@ -61,6 +61,8 @@ struct crc_proc
     static constexpr bool is_function = true;
 };
 */
+//template<typename FldType, std::size_t N
+//         const char (&Name)[N]>
 template<typename FldType, const char *Name>
 struct field
 {

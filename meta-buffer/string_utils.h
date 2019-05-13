@@ -28,5 +28,18 @@ constexpr auto create_from_ce(const char (&src)[N])
     constexpr auto str2 = str_utils_ce::strcpy_ce(src, str1);
     return str1;
 }
-
+inline
+constexpr bool str_equal_ce(const char *src, const char *dst)
+{
+    int i = 0;
+    for (; src[i] != 0 && dst[i] != 0; i++)
+    {
+        if(src[i] == dst[i])
+            continue;
+        return false;
+    }
+    if (src[i] != 0 || dst[i] != 0)
+        return false;
+    return true;
+}
 }

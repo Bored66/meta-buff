@@ -21,7 +21,7 @@ void probs()
     crc_test();
 
     cmd_prepare_test();
-    //string_utils_test();
+    string_utils_test();
     //byte_stream_test();
 }
 void cmd_tests()
@@ -114,8 +114,19 @@ void basic_test()
 }
 void string_utils_test()
 {
+    using namespace str_utils_ce;
     constexpr char func_name[] = "0123456789";//  __PRETTY_FUNCTION__ ;
     type_name<decltype(func_name)>();
+    static_assert(str_equal_ce(DataField16().name,
+                               DataField16().name),
+                   "Not Equal");
+    static_assert(not str_equal_ce(DataField().name,
+                               DataField16().name),
+                   "Equal");
+    static_assert(not str_equal_ce(MarkerField().name,
+                               DataField16().name),
+                   "Equal");
+
     //constexpr auto str_sz = str_utils_ce::strlen_ce(func_name);
     //constexpr auto str2 = str_utils_ce::create_from_ce(func_name);
     //std::cout << " " << func_name << ":" << std::dec << str_sz;
