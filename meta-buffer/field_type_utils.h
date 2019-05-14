@@ -6,11 +6,25 @@
 #include <iostream>
 
 #include "field_types.h"
+#include "string_utils.h"
 
 template <typename Type>
-void type_name()
+void print_type_name()
 {
-    std::cout << __PRETTY_FUNCTION__;
+    using namespace str_utils_ce;
+
+    const char *func_name{__PRETTY_FUNCTION__};
+    auto start = find_char_offset(func_name, '[');
+    if (start > -1) start += 5;
+    auto end = find_char_offset(func_name, ']');
+    if (start == -1 || end == -1)
+    {
+        std::cout << func_name << std::endl;
+        return;
+    }
+    char type_str[end - start]{};
+    str_copy_ce(func_name, type_str, end - start, start, end);
+    std::cout << type_str << std::endl;
 }
 template<bool L, typename T>
 using enable_if_t = typename std::enable_if<L,T>::type;
@@ -19,7 +33,7 @@ template <typename field_type>
 void print_field_name_type(const char*fldName)
 {
     std::cout << fldName << ": " ;
-    type_name<field_type>();
+    print_type_name<field_type>();
 }
 template <typename Fld>
 enable_if_t<is_integral_const<typename Fld::type>::is_const, void>
@@ -47,7 +61,7 @@ print_field_typeinfo()
 {
     using item_type = typename Fld::type;
     print_field_name_type<item_type>(Fld{}.name);
-    type_name<typename Fld::proc_type>();
+    print_type_name<typename Fld::proc_type>();
     std::cout << " " << uint32_t(Fld::proc_crc(nullptr, 3)) << std::endl;
 }
 
@@ -180,12 +194,25 @@ void print_flat_tuple(const std::tuple<Flds...> & tpl)
     std::cout << std::endl;
 }
 template <typename... Flds>
-void print_field_names(const std::tuple<Flds...> & tpl)
+void print_field_names(const std::tuple<Flds...> &)
 {
     const char *names[] = { Flds().name... };
     std::cout << "\nDump field names: ";
     for (auto name : names)
         std::cout << name << " ";
     std::cout << std::endl;
+}
+template <typename... Flds>
+constexpr
+int find_field_name_offset(const std::tuple<Flds...> &, const char* name)
+{
+    using namespace str_utils_ce;
+    const char *names[] = { Flds().name... };
+    for (size_t i = 0; i < sizeof(names)/sizeof(names[0]);i++)
+    {
+        if (str_equal_ce(names[i], name))
+            return i;
+    }
+    return -1;
 }
 

@@ -4,14 +4,10 @@
 
 #include "field_type_utils.h"
 
-template <
-        //template<class...> class CONT,
-        //typename... TupleTypes
-        typename Tuple
-        >
+template <typename Tuple>
 struct tuple_holder
 {
-    using TypeHolder = Tuple;// CONT<TupleTypes...>; //std::tuple<TupleTypes...>;
+    using TypeHolder = Tuple;
 protected:
     TypeHolder _tuple;
     virtual TypeHolder get_tuple() { return _tuple; }

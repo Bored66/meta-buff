@@ -25,8 +25,6 @@ using DataField = field<uint8_t, data>;
 using DataField16 = field<uint16_t, data16>;
 using DataField32 = field<uint32_t, data32>;
 using CrcField = crc_field<uint8_t, crc, &crc8>;
-//using CrcField = field<crc_proc<&crc8>, crc>;
-//using CrcField_14 = field<&crc8, crc>;
 
 using Cmd1st = std::tuple<MarkerField, CommandField1,
     DataField, DataField16, CrcField>;

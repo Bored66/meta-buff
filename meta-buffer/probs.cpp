@@ -83,13 +83,11 @@ void cmd_prepare_test()
 void basic_test()
 {
     constexpr MarkerField mf;
-    //constexpr CrcField crcField;
 
     constexpr bool f = field_type<typename std::tuple_element<4, Cmd1st>::type>::is_function;
     static_assert (f == false, "T");
     static_assert (mf.name == markerFldName, "mf.name == marker");
     static_assert (std::is_same<CrcField::type, uint8_t>::value, "is_same<CrcField::type");
-    //static_assert (std::is_same<CrcField_14::type, uint8_t>::value, "is_same<CrcField::type");
     static_assert (std::is_same<CrcField, std::tuple_element<4, Cmd1st>::type
                    >::value, "is_same Crcfield");
     static_assert(is_integral_const<std::integral_constant<uint8_t, 11>>::is_const, "not integral const");
@@ -108,42 +106,39 @@ void basic_test()
     print_cmd_field_types(Cmd1st{});
     print_cmd_field_types(Cmd2nd{});
     std::cout << std::endl;
-    type_name<decltype(get_cmd_field_types(Cmd1st{}))>();
+    print_type_name<decltype(get_cmd_field_types(Cmd1st{}))>();
     std::cout << std::endl;
-    type_name<decltype(get_cmd_field_types(Cmd2nd{}))>();
+    print_type_name<decltype(get_cmd_field_types(Cmd2nd{}))>();
     std::cout << std::endl;
 }
 
 void string_utils_test()
 {
     using namespace str_utils_ce;
-    constexpr char func_name[] = "0123456789";//  __PRETTY_FUNCTION__ ;
-    type_name<decltype(func_name)>();
+    print_type_name<cmd2args>();//test for str_copy_ce
     static_assert(str_equal_ce(DataField16().name,
                                DataField16().name), "Not Equal");
     static_assert(not str_equal_ce(DataField().name,
                                DataField16().name), "Equal");
     static_assert(not str_equal_ce(MarkerField().name,
                                DataField16().name), "Equal");
+    static_assert(find_char_offset("[][][][][]",'[')==0, "[");
+    static_assert(find_char_offset("[][][][][]",'{')==-1, "{");
     find_field_test();
-    //constexpr auto str_sz = str_utils_ce::strlen_ce(func_name);
-    //constexpr auto str2 = str_utils_ce::create_from_ce(func_name);
-    //std::cout << " " << func_name << ":" << std::dec << str_sz;
+    static_assert(str_utils_ce::strlen_ce("aaaa"), "aaaa!=4");
 }
 void find_field_test()
 {
-    using namespace str_utils_ce;
     print_field_names(Cmd1st{});
     static_assert(find_field_name_offset(Cmd1st{},
-                              DataField16().name) == 3, "3");
+                              DataField16{}.name) == 3, "3");
     static_assert(find_field_name_offset(Cmd1st{},
-                              DataField16().name) != 2, "Not 2");
+                              DataField16{}.name) != 2, "Not 2");
     static_assert(find_field_name_offset(Cmd1st{},
-                              DataField().name) == 2, "2");
+                              DataField{}.name) == 2, "2");
     static_assert(find_field_name_offset(Cmd1st{},
                               DataField32{}.name) == -1, "-1");
 }
-
 void byte_stream_test()
 {
     byte_stream bs1;
@@ -160,6 +155,7 @@ void byte_stream_test()
 }
 extern inline uint8_t crc8(uint8_t*seq, size_t size)
 {
+    (void)seq;
     std::cout << __PRETTY_FUNCTION__ << ":" << size << std::endl;
     return uint8_t(size);
 }

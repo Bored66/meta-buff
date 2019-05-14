@@ -31,4 +31,3 @@ constexpr auto forward_params(Args&&...args)
               "Too many parameters supplied exceeding number non-const of fields");
     return forward_params_impl<Type>(std::make_index_sequence<fact_count>{}, args...);
 }
-

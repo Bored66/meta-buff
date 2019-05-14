@@ -2,37 +2,18 @@
 
 namespace str_utils_ce
 {
-inline
-constexpr size_t strlen_ce(const char* const str)
-{
-    if (str && *str != 0)
-        return 1 + strlen_ce(str+1);
-    return 0;
-}
-template<size_t N>
-inline
-constexpr auto strcpy_ce(const char (&src)[N], char (&dst)[N]) -> decltype(dst)
-{
-    for (int i = 0;src; i++)
-    {
-        dst[i] = src[i];
-        if(src[i] == 0) break;
-    }
-    return dst;
-}
-template<size_t N>
-inline
-constexpr auto create_from_ce(const char (&src)[N])
-{
-    const char str1[N];
-    constexpr auto str2 = str_utils_ce::strcpy_ce(src, str1);
-    return str1;
-}
-inline
-constexpr bool str_equal_ce(const char *src, const char *dst)
+inline constexpr
+size_t strlen_ce(const char* str) noexcept
 {
     int i = 0;
-    for (; src[i] != 0 && dst[i] != 0; i++)
+    while(str[i]) i++;
+    return i;
+}
+inline constexpr
+bool str_equal_ce(const char *src, const char *dst) noexcept
+{
+    int i = 0;
+    for (; src[i] && dst[i]; i++)
     {
         if(src[i] == dst[i])
             continue;
@@ -42,17 +23,29 @@ constexpr bool str_equal_ce(const char *src, const char *dst)
         return false;
     return true;
 }
-template <typename... Flds>
-constexpr
-int find_field_name_offset(const std::tuple<Flds...> & tpl, const char* name)
+inline constexpr
+int find_char_offset(const char *src, const char ch) noexcept
 {
-    const char *names[] = { Flds().name... };
-    for (int i = 0; i < sizeof(names)/sizeof(names[0]);i++)
+    for (int i = 0; src[i] ;i++)
     {
-        if (str_equal_ce(names[i], name))
+        if (src[i] == ch)
             return i;
     }
     return -1;
+}
+//template<size_t N>
+inline constexpr
+auto str_copy_ce(const char *src, char *dst, std::size_t dst_size,
+                 // char (&dst)[N],
+                           std::size_t from, std::size_t to) noexcept
+{
+    for (size_t src_index = 0, dst_index = 0;
+         src[src_index] && dst_index < dst_size ; src_index++)
+    {
+        if (src_index > from && src_index < to)
+            dst[dst_index++] = src[src_index];
+    }
+    return dst;
 }
 
 }

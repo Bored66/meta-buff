@@ -24,45 +24,6 @@ struct field_type
     using orig_type = FldType;
     static constexpr bool is_function = false;
 };
-/*
-template <typename FldType, typename MiscType,
-          template <class X, class Y> class Templ>
-struct field_type<Templ<FldType, MiscType>>
-{
-    static constexpr bool is_composite = true;
-    using type = FldType;
-    using orig_type = Templ<FldType, MiscType>;
-    static constexpr bool is_function = false;
-};
-template <typename FldType, const char* MiscType,
-          template <class X, const char* Y> class Templ>
-struct field_type<Templ<FldType, MiscType>>
-{
-    static constexpr bool is_composite = true;
-    using type = FldType;
-    using orig_type = Templ<FldType, MiscType>;
-    static constexpr bool is_function = false;
-};
-template <typename FldType, //typename MiscType,
-          class...Args>
-struct field_type<FldType(*)(Args...)>
-{
-    static constexpr bool is_composite = true;
-    using type = FldType;
-    using orig_type = FldType(*)(Args...);
-    static constexpr bool is_function = true;
-};
-using CRC8 = uint8_t(uint8_t*seq, std::size_t size);
-template<CRC8*FuncPtr>
-struct crc_proc
-{
-    using type = decltype(FuncPtr);
-    static constexpr CRC8 *funcPtr = FuncPtr;
-    static constexpr bool is_function = true;
-};
-*/
-//template<typename FldType, std::size_t N
-//         const char (&Name)[N]>
 template<typename FldType, const char *Name>
 struct field
 {
