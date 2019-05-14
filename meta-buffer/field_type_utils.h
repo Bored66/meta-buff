@@ -179,3 +179,13 @@ void print_flat_tuple(const std::tuple<Flds...> & tpl)
     print_flat_tuple_impl(tpl, std::make_index_sequence<sizeof...(Flds)>{});
     std::cout << std::endl;
 }
+template <typename... Flds>
+void print_field_names(const std::tuple<Flds...> & tpl)
+{
+    const char *names[] = { Flds().name... };
+    std::cout << "\nDump field names: ";
+    for (auto name : names)
+        std::cout << name << " ";
+    std::cout << std::endl;
+}
+

@@ -42,4 +42,17 @@ constexpr bool str_equal_ce(const char *src, const char *dst)
         return false;
     return true;
 }
+template <typename... Flds>
+constexpr
+int find_field_name_offset(const std::tuple<Flds...> & tpl, const char* name)
+{
+    const char *names[] = { Flds().name... };
+    for (int i = 0; i < sizeof(names)/sizeof(names[0]);i++)
+    {
+        if (str_equal_ce(names[i], name))
+            return i;
+    }
+    return -1;
+}
+
 }

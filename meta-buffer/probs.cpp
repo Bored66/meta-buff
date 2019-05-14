@@ -13,6 +13,7 @@ void string_utils_test();
 void cmd_prepare_test();
 void crc_test();
 void cmd_tests();
+void find_field_test();
 
 void probs()
 {
@@ -112,25 +113,37 @@ void basic_test()
     type_name<decltype(get_cmd_field_types(Cmd2nd{}))>();
     std::cout << std::endl;
 }
+
 void string_utils_test()
 {
     using namespace str_utils_ce;
     constexpr char func_name[] = "0123456789";//  __PRETTY_FUNCTION__ ;
     type_name<decltype(func_name)>();
     static_assert(str_equal_ce(DataField16().name,
-                               DataField16().name),
-                   "Not Equal");
+                               DataField16().name), "Not Equal");
     static_assert(not str_equal_ce(DataField().name,
-                               DataField16().name),
-                   "Equal");
+                               DataField16().name), "Equal");
     static_assert(not str_equal_ce(MarkerField().name,
-                               DataField16().name),
-                   "Equal");
-
+                               DataField16().name), "Equal");
+    find_field_test();
     //constexpr auto str_sz = str_utils_ce::strlen_ce(func_name);
     //constexpr auto str2 = str_utils_ce::create_from_ce(func_name);
     //std::cout << " " << func_name << ":" << std::dec << str_sz;
 }
+void find_field_test()
+{
+    using namespace str_utils_ce;
+    print_field_names(Cmd1st{});
+    static_assert(find_field_name_offset(Cmd1st{},
+                              DataField16().name) == 3, "3");
+    static_assert(find_field_name_offset(Cmd1st{},
+                              DataField16().name) != 2, "Not 2");
+    static_assert(find_field_name_offset(Cmd1st{},
+                              DataField().name) == 2, "2");
+    static_assert(find_field_name_offset(Cmd1st{},
+                              DataField32{}.name) == -1, "-1");
+}
+
 void byte_stream_test()
 {
     byte_stream bs1;
