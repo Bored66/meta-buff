@@ -122,7 +122,7 @@ void string_utils_test()
                                DataField16().name), "Equal");
     static_assert(not str_equal_ce(MarkerField().name,
                                DataField16().name), "Equal");
-    static_assert(find_char_offset("[][][][][]",'[')==0, "[");
+    static_assert(find_char_offset("  [][][][][]",'[')==2, "[");
     static_assert(find_char_offset("[][][][][]",'{')==-1, "{");
     find_field_test();
     static_assert(str_utils_ce::strlen_ce("aaaa"), "aaaa!=4");
@@ -138,20 +138,6 @@ void find_field_test()
                               DataField{}.name) == 2, "2");
     static_assert(find_field_name_offset(Cmd1st{},
                               DataField32{}.name) == -1, "-1");
-}
-void byte_stream_test()
-{
-    byte_stream bs1;
-    std::vector<uint8_t> bs;
-    uint8_t bytes[] = {11,12,13,14,15};
-    for (uint32_t i = 0; i < 6; i++)
-        bs.insert(bs.begin(), bytes, bytes+i);
-    for (uint32_t i = 0; i < 6; i++)
-        bs.insert(bs.end(), bytes, bytes+i);
-    for (uint32_t i = 1; i <= bs1.size(); i++)
-        bs1.append(bytes, i);
-    for (uint32_t i = 0; i < bs1.size(); i++)
-        std::cout << std::hex << int(bs1[i]) << " ";
 }
 extern inline uint8_t crc8(uint8_t*seq, size_t size)
 {

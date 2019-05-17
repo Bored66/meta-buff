@@ -8,14 +8,17 @@
 #include "field_types.h"
 #include "string_utils.h"
 
+template<bool L, typename T>
+using enable_if_t = typename std::enable_if<L,T>::type;
+
 template <typename Type>
 void print_type_name()
 {
     using namespace str_utils_ce;
-
+    const size_t offset = 5;//skipping "with " after [
     const char *func_name{__PRETTY_FUNCTION__};
     auto start = find_char_offset(func_name, '[');
-    if (start > -1) start += 5;
+    if (start > -1) start += offset;
     auto end = find_char_offset(func_name, ']');
     if (start == -1 || end == -1)
     {
@@ -26,8 +29,6 @@ void print_type_name()
     str_copy_ce(func_name, type_str, end - start, start, end);
     std::cout << type_str << std::endl;
 }
-template<bool L, typename T>
-using enable_if_t = typename std::enable_if<L,T>::type;
 
 template <typename field_type>
 void print_field_name_type(const char*fldName)

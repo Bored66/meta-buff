@@ -36,12 +36,12 @@ HEADERS += \
     field_types.h \
     string_utils.h \
     field_helpers.h \
-    byte_stream.h \
+    #byte_stream.h \
     cmd_field_info.h \
     forward_cmd_params.h \
     extract_cmd_params_types.h
 
 SOURCES += \
     main.cpp \
-    probs.cpp \
-    byte_stream.cpp
+    probs.cpp #\
+    #byte_stream.cpp
