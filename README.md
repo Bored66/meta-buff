@@ -1,9 +1,9 @@
 ## Description
 This project intended to be in support of RPPS (Rapid Protocol Prototyping Solution - https://github.com/Bored66/RPPS ).
 Instead of defining protocol using XMl files it should be possible to define everything just by using certain set of classes and
-very little code generation (thru variadic macros) while compiler should do the rest.
+very little code generation (possibly with some help from variadic macros) while compiler should do the rest.
 
-Suppose we defne some structures like the following:
+Suppose we defne some set of structures like the following:
 ``` c++
 constexpr char markerFldName[] {"Marker"};
 constexpr char commandFldName[] {"Command"};
@@ -36,6 +36,7 @@ using Cmd2nd = std::tuple<MarkerField, CommandField2,
 // More of the same...
 
 ```
+Based just on given definitions we should be able to infer all information needed to create infrastructure source code (datagram parsing, dispatching, serialization/diserialization, create basic device emulation facility as well as be able to check protocol consistency/coherence). 
 
 ### WARNING: 
 This projects involves heavy use of meta-programming (templates and const expressions) and requires C++14 capable compiler.
