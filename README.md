@@ -10,8 +10,7 @@ constexpr char data16FldName[] {"Data16"};
 constexpr char data32FldName[] {"Data32"};
 constexpr char crcFldName[] {"CRC"};
 extern inline uint8_t crc8(uint8_t*seq, size_t size);
-template<uint8_t I>
-  using byte_i_c = std::integral_constant<uint8_t, I>;
+
 const auto marker_v = 0xAA;
 
 using MarkerField = field<byte_i_c<marker_v>, markerFldName>;
