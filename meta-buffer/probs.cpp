@@ -41,7 +41,8 @@ void cmd_tests()
 void crc_test()
 {
     std::tuple_element<4, Cmd1st>::type::proc_crc(nullptr, 1);
-    std::tuple_element<4, Cmd1st>::type::proc_type tt = std::tuple_element<4, Cmd1st>::type::proc_crc;
+    std::tuple_element<4, Cmd1st>::type::proc_type tt =
+            std::tuple_element<4, Cmd1st>::type::proc_crc;
     tt(nullptr,3);
 }
 
@@ -138,6 +139,11 @@ void find_field_test()
                               DataField{}.name) == 2, "2");
     static_assert(find_field_name_offset(Cmd1st{},
                               DataField32{}.name) == -1, "-1");
+    print_field_names(Cmd4th{});
+    std::cout << NobField{}.name << " offset: "
+         << find_field_name_offset(Cmd4th{}, VarField_uint16().refFieldName)
+         << " " << find_field_name_offset(Cmd4th{}, VarField_uint16().name) << " "
+         << VarField_uint16().refFieldName;
 }
 extern inline uint8_t crc8(uint8_t*seq, size_t size)
 {

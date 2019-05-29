@@ -34,12 +34,22 @@ struct field
 };
 template<typename FldType, const char *Name,
          FldType(*FuncPtr)(uint8_t*seq, std::size_t size)>
-struct crc_field
+struct crc_field : field<FldType, Name>
 {
-    using type = FldType;
+//    using type = FldType;
     using proc_type = FldType(*)(uint8_t*seq, std::size_t size);
-    const char *name{Name};
+//    const char *name{Name};
     static constexpr proc_type proc_crc = FuncPtr;
     static constexpr bool is_function = true;
     static constexpr bool has_value = true;//TODO: from applying proc_crc
+};
+template<typename FldType, const char *Name,
+         const char *RefFieldName,
+         std::size_t HEADERSIZE = 0,
+         std::size_t MULTI = 1>
+struct varsized_field : field<FldType, Name>
+{
+    static constexpr std::size_t headerSize = HEADERSIZE;
+    static constexpr std::size_t multiplier = MULTI;
+    const char *refFieldName{RefFieldName};
 };
