@@ -17,7 +17,7 @@ void find_field_test();
 
 void probs()
 {
-    //basic_test();
+    basic_test();
     cmd_tests();
     crc_test();
 
@@ -106,11 +106,15 @@ void basic_test()
     static_assert(is_integral_const<t3::type>::is_const, "not integral const");
     print_cmd_field_types(Cmd1st{});
     print_cmd_field_types(Cmd2nd{});
+    print_cmd_field_types(Cmd4thA{});
     std::cout << std::endl;
     print_type_name<decltype(get_cmd_field_types(Cmd1st{}))>();
     std::cout << std::endl;
     print_type_name<decltype(get_cmd_field_types(Cmd2nd{}))>();
     std::cout << std::endl;
+    print_type_name<decltype(get_cmd_field_types(Cmd4thA{}))>();
+    std::cout << std::endl;
+    print_field_typeinfo<tuple_element_t<4, Cmd4thA>>();
 }
 
 void string_utils_test()
