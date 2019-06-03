@@ -69,8 +69,9 @@ void cmd_prepare_test()
     using target = std::tuple<uint8_t, int16_t, int64_t, float>;
 
     constexpr auto tupleCmd1st = forward_params<Cmd1st>(75,'3');
-//    print_item_value(std::get<0>(tupleCmd1st));
+    //print_item_value(std::get<0>(tupleCmd1st));
     print_flat_tuple(tupleCmd1st);
+    std::cout << "total_size(): " << datagram_size<Cmd1st>();
     std::cout << std::endl;
     using res = extract_cmd_params_types_result<src>;
     using srcNoParams = std::tuple<byte_i_c<0x0>,
@@ -83,8 +84,9 @@ void cmd_prepare_test()
     static_assert(std::is_same<select_type_t<not byte_i_c<0x01>::value,uint8_t,int8_t>, int8_t>::value, "");
     src src1;
     Cmd1class cmd1;
-    constexpr auto tupleCmd4 = forward_params<Cmd4thA>(75,pod{115,'3'});
+    constexpr auto tupleCmd4 = forward_params<Cmd5th>(75,pod{115,'3',345});
     print_flat_tuple(tupleCmd4);
+    std::cout << "total_size(): " << datagram_size<Cmd5th>();
 }
 void basic_test()
 {
@@ -111,15 +113,15 @@ void basic_test()
     static_assert(is_integral_const<t3::type>::is_const, "not integral const");
     print_cmd_field_types(Cmd1st{});
     print_cmd_field_types(Cmd2nd{});
-    print_cmd_field_types(Cmd4thA{});
+    print_cmd_field_types(Cmd5th{});
     std::cout << std::endl;
     print_type_name<decltype(get_cmd_field_types(Cmd1st{}))>();
     std::cout << std::endl;
     print_type_name<decltype(get_cmd_field_types(Cmd2nd{}))>();
     std::cout << std::endl;
-    print_type_name<decltype(get_cmd_field_types(Cmd4thA{}))>();
+    print_type_name<decltype(get_cmd_field_types(Cmd5th{}))>();
     std::cout << std::endl;
-    print_field_typeinfo<tuple_element_t<4, Cmd4thA>>();
+    print_field_typeinfo<tuple_element_t<4, Cmd5th>>();
 }
 
 void string_utils_test()

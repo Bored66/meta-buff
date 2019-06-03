@@ -19,6 +19,7 @@ const auto cmd1_v = 0x01;
 const auto cmd2_v = 0x02;
 const auto cmd3_v = 0x03;
 const auto cmd4_v = 0x04;
+const auto cmd5_v = 0x05;
 
 using MarkerField = field<byte_i_c<marker_v>, markerFldName>;
 using CommandField = field<uint8_t, commandFldName>;
@@ -26,6 +27,7 @@ using CommandField1 = field<byte_i_c<cmd1_v>, commandFldName>;
 using CommandField2 = field<byte_i_c<cmd2_v>, commandFldName>;
 using CommandField3 = field<byte_i_c<cmd3_v>, commandFldName>;
 using CommandField4 = field<byte_i_c<cmd4_v>, commandFldName>;
+using CommandField5 = field<byte_i_c<cmd5_v>, commandFldName>;
 
 using DataField = field<uint8_t, dataFldName>;
 using DataField16 = field<uint16_t, data16FldName>;
@@ -46,13 +48,14 @@ using VarField_uint16 = varsized_field<uint16_t, data16FldName, nobFldName>;
 
 struct pod
 {
-    uint16_t i16;
+    uint16_t ush1;
     uint8_t i8;
+    uint16_t ush2;
 };
 using Field_pod = field<pod, podFldName>;
 
 using Cmd4th = std::tuple<MarkerField, CommandField4,
     DataField, NobField, VarField_uint16, CrcField>;
 
-using Cmd4thA = std::tuple<MarkerField, CommandField4,
+using Cmd5th = std::tuple<MarkerField, CommandField5,
     DataField, Field_pod, CrcField>;

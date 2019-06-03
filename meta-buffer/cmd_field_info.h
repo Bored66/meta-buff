@@ -4,6 +4,23 @@
 
 #include "field_type_utils.h"
 
+template<typename FldType>
+constexpr enable_if_t<is_pod_struct<FldType>::value == false,std::size_t>
+field_size()
+{
+    return sizeof(FldType);
+}
+template<typename FldType>
+constexpr enable_if_t<is_pod_struct<FldType>::value == true,std::size_t>
+field_size()
+{
+    auto info = get_pod_meta_infos<FldType>();
+    size_t total = 0;
+    for (int i = 0; i < info.index; ++i)
+        total += info.type_sizes[i];
+    return total;
+}
+
 template<std::size_t N>
 struct cmd_info
 {
@@ -17,7 +34,7 @@ struct cmd_info
     {
         const_vals[index] = cv;
     }
-    constexpr std::size_t add_field_size(const uint8_t size, std::size_t index) noexcept
+    constexpr std::size_t add_field_size(const std::size_t size, std::size_t index) noexcept
     {
         return field_size[index] = size;
     }
@@ -47,6 +64,13 @@ struct cmd_info
         }
         return index;
     }
+    constexpr std::size_t total_size() const noexcept
+    {
+        size_t total = 0;
+        for (int i = 0; i < N; ++i)
+            total += field_size[i];
+        return total;
+    }
 };
 template
 <
@@ -66,7 +90,7 @@ noexcept -> decltype(info)
         info.add_other(is_integral_const<tuple_element_field_t<I, Command>>::is_const == false &&
                        std::tuple_element<I, Command>::type::is_function == true?
                         cmd_info_n::field_type::CRC : cmd_info_n::field_type::OTHER ,I),
-        info.add_field_size(sizeof(tuple_element_field_t<I, Command>), I)
+        info.add_field_size(field_size<tuple_element_field_t<I, Command>>(), I)
         )...
     );
     info.update_params();
@@ -82,4 +106,23 @@ auto get_cmd_field_info()
 {
     return collect_cmd_field_info<Cmd, FieldCount>
             (std::make_index_sequence<FieldCount>());
+}
+
+template<typename Tuple>
+constexpr size_t datagram_size() noexcept
+{
+    constexpr auto info = get_cmd_field_info<Tuple>();
+    return info.total_size();
+}
+
+template<typename Tuple, size_t N = datagram_size<Tuple>()>
+struct datagram
+{
+    char bytes[N];
+};
+template<typename Tuple, int N = datagram_size<Tuple>()>
+constexpr auto tuple_to_byte_array(const Tuple& tuple)
+-> decltype(datagram<Tuple, N>{})
+{
+    return {};
 }

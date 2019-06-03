@@ -178,11 +178,12 @@ using select_type_t = typename select_type<Cond, T, F>::type;
 
 constexpr bool or_op(bool cond, bool cond2)
 { return cond || cond2; }
+
 template<typename item_type>
 struct if_not_param
-{ bool value = is_integral_const<item_type>::is_const ||
-           false ; };
-
+{
+    bool value = is_integral_const<item_type>::is_const || false ;
+};
 
 template <typename Fld>
 enable_if_t<is_pod_struct<Fld>::value==false &&
@@ -204,7 +205,7 @@ void print_item_value(unsigned char fld)
 template <typename Fld>
 enable_if_t<is_pod_struct<Fld>::value == true,void>
 print_item_value(const Fld& fld)
-{ dump_struct(fld);}
+{ dump_struct(fld); }
 
 template <typename Fld>
 auto print_item(const Fld& fld, size_t number)
