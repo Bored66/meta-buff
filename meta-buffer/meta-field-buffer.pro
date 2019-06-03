@@ -41,7 +41,15 @@ HEADERS += \
     forward_cmd_params.h \
     extract_cmd_params_types.h
 
+message($${PWD}/../type_info_extractor-beta/pod_extractor/tests/)
 SOURCES += \
     main.cpp \
+    $${PWD}/../type_info_extractor-beta/pod_extractor/tests/tests.cpp \
+    $${PWD}/../type_info_extractor-beta/pod_extractor/tests/pod_ops.cpp \
     probs.cpp #\
     #byte_stream.cpp
+
+DEFINES += USE_CPP_11_WAY
+
+
+INCLUDEPATH += ../type_info_extractor-beta/

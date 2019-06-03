@@ -49,10 +49,10 @@ struct pod
     uint16_t i16;
     uint8_t i8;
 };
-using VarField_pod = varsized_field<pod, podFldName, nobFldName>;
+using Field_pod = field<pod, podFldName>;
 
 using Cmd4th = std::tuple<MarkerField, CommandField4,
     DataField, NobField, VarField_uint16, CrcField>;
 
 using Cmd4thA = std::tuple<MarkerField, CommandField4,
-    DataField, NobField, VarField_pod, CrcField>;
+    DataField, Field_pod, CrcField>;

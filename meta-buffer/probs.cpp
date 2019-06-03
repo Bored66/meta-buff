@@ -17,8 +17,8 @@ void find_field_test();
 
 void probs()
 {
-    basic_test();
-    cmd_tests();
+    //basic_test();
+    //cmd_tests();
     crc_test();
 
     cmd_prepare_test();
@@ -27,11 +27,12 @@ void probs()
 }
 void cmd_tests()
 {
-    constexpr auto firstCmdInfo = get_cmd_field_info<Cmd1st>();
+    using test_cmd = Cmd1st;
+    constexpr auto firstCmdInfo = get_cmd_field_info<test_cmd>();
     size_t arr[firstCmdInfo.const_vals[0]];(void)arr;
     static_assert(firstCmdInfo.const_vals[0] == 170, "firstCmdInfo.const_vals[0] != 10");
-    static_assert(firstCmdInfo.const_vals[1] == 1, "firstCmdInfo.const_vals[0] != 10");
-    static_assert(firstCmdInfo.const_vals[2] == 0, "firstCmdInfo.const_vals[0] != 10");
+    static_assert(firstCmdInfo.const_vals[1] == 1, "firstCmdInfo.const_vals[0] != 1");
+    static_assert(firstCmdInfo.const_vals[2] == 0, "firstCmdInfo.const_vals[0] != 0");
     for (uint32_t i = 0; i < firstCmdInfo.size(); i++)
     {
         std::cout << std::hex << std::uppercase << "0x" << uint32_t(firstCmdInfo.const_vals[i]) << ":"
@@ -67,8 +68,10 @@ void cmd_prepare_test()
     std::cout << std::endl;
     using target = std::tuple<uint8_t, int16_t, int64_t, float>;
 
-    constexpr auto tuple3 = forward_params<Cmd1st>(5.2,'3');
-    print_flat_tuple(tuple3);
+    constexpr auto tupleCmd1st = forward_params<Cmd1st>(75,'3');
+//    print_item_value(std::get<0>(tupleCmd1st));
+    print_flat_tuple(tupleCmd1st);
+    std::cout << std::endl;
     using res = extract_cmd_params_types_result<src>;
     using srcNoParams = std::tuple<byte_i_c<0x0>,
     byte_i_c<0x01>,  byte_i_c<0x02>,  byte_i_c<0x03>>;
@@ -80,6 +83,8 @@ void cmd_prepare_test()
     static_assert(std::is_same<select_type_t<not byte_i_c<0x01>::value,uint8_t,int8_t>, int8_t>::value, "");
     src src1;
     Cmd1class cmd1;
+    constexpr auto tupleCmd4 = forward_params<Cmd4thA>(75,pod{115,'3'});
+    print_flat_tuple(tupleCmd4);
 }
 void basic_test()
 {
@@ -99,8 +104,8 @@ void basic_test()
     val++;
     using t2 = CrcField;
     static_assert(not is_integral_const<t2>::is_const, "integral const?");
-    print_field_typeinfo<tuple_element_t<0, Cmd1st>>();
-    print_field_typeinfo<CrcField>();
+    //print_field_typeinfo<tuple_element_t<0, Cmd1st>>();
+    //print_field_typeinfo<CrcField>();
     using t3 = tuple_element_t<0, Cmd1st>;
     t3 t3v;(void)t3v;
     static_assert(is_integral_const<t3::type>::is_const, "not integral const");

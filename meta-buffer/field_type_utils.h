@@ -4,10 +4,15 @@
 #include <typeinfo>
 
 #include <iostream>
+#include <cstdint>
 
 #include "field_types.h"
 #include "string_utils.h"
 
+#include "pod_extractor/pod_inspector.h"
+#include "pod_extractor/typeid_array.h"
+
+#include "pod_extractor/tests/tests.h"
 template<bool L, typename T>
 using enable_if_t = typename std::enable_if<L,T>::type;
 
@@ -178,13 +183,42 @@ struct if_not_param
 { bool value = is_integral_const<item_type>::is_const ||
            false ; };
 
+
+template <typename Fld>
+enable_if_t<is_pod_struct<Fld>::value==false &&
+        is_integral_const<Fld>::is_const == false,void>
+print_item_value(const Fld& fld)
+{ //std::cout << __PRETTY_FUNCTION__;
+    std::cout  << fld ;
+}
+
+void print_item_value(char fld)
+{ //std::cout << __PRETTY_FUNCTION__;
+    std::cout  << int16_t(fld) ;
+}
+void print_item_value(unsigned char fld)
+{ //std::cout << __PRETTY_FUNCTION__;
+    std::cout  << uint16_t(fld) ;
+}
+
+template <typename Fld>
+enable_if_t<is_pod_struct<Fld>::value == true,void>
+print_item_value(const Fld& fld)
+{ dump_struct(fld);}
+
 template <typename Fld>
 auto print_item(const Fld& fld, size_t number)
-{ std::cout << number << ":" << uint32_t(fld) << " "; return number; }
+{
+    std::cout << number << ":[";
+    print_item_value(fld);
+    std::cout    << "] ";
+    return number;
+}
 
 template <typename... Flds, size_t... I>
 void print_flat_tuple_impl(const std::tuple<Flds...> & tpl, std::index_sequence<I...>)
 {
+    std::cout << std::hex;
     swallow{ print_item(std::get<I>(tpl), I)... };
 }
 
