@@ -34,6 +34,8 @@ using Cmd2nd = std::tuple<MarkerField, CommandField2,
 
 ```
 Based just on given definitions we should be able to infer all information needed to create infrastructure source code (datagram parsing, dispatching, serialization/diserialization, create basic device emulation facility as well as be able to check protocol consistency/coherence and test using basic emulation). Please, note that all the code generation is supposed to be done by compiler at compile time (unlike RPPS where we need to employ code generation facilities on XML), which should allow developers to find possible problems on early stages of development process by means of compiler. Also, it's supposed to help reduce code footprint and corresponding maintenance costs.
+### Note:
+ Requires: https://github.com/Bored66/type_info_extractor
 
 ### WARNING: 
 This projects involves heavy use of meta-programming (templates and const expressions) and requires C++14 capable compiler.
