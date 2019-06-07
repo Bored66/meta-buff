@@ -71,6 +71,10 @@ void cmd_prepare_test()
     constexpr auto tupleCmd1st = forward_params<Cmd1st>(75,'3');
     //print_item_value(std::get<0>(tupleCmd1st));
     print_flat_tuple(tupleCmd1st);
+    auto datagram = tuple_to_datagram<datagram_size<Cmd1st>()>(tupleCmd1st);
+    std::cout << std::endl;
+    datagram.print_seq();
+    std::cout << std::endl;
     std::cout << "total_size(): " << datagram_size<Cmd1st>();
     std::cout << std::endl;
     using res = extract_cmd_params_types_result<src>;
@@ -86,7 +90,13 @@ void cmd_prepare_test()
     Cmd1class cmd1;
     constexpr auto tupleCmd4 = forward_params<Cmd5th>(75,pod{115,'3',345});
     print_flat_tuple(tupleCmd4);
-    std::cout << "total_size(): " << datagram_size<Cmd5th>();
+    std::cout << "total_size(): " << datagram_size<Cmd5th>()
+                 ;
+    /*{
+        auto datagram = tuple_to_datagram<datagram_size<Cmd5th>()>(tupleCmd4);
+        datagram.print_seq();
+    }*/
+    std::cout << std::endl;
 }
 void basic_test()
 {

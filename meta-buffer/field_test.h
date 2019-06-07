@@ -49,7 +49,7 @@ using VarField_uint16 = varsized_field<uint16_t, data16FldName, nobFldName>;
 struct pod
 {
     uint16_t ush1;
-    uint8_t i8;
+    uint8_t ui8;
     uint16_t ush2;
 };
 using Field_pod = field<pod, podFldName>;

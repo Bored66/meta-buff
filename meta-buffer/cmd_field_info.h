@@ -16,7 +16,7 @@ field_size()
 {
     auto info = get_pod_meta_infos<FldType>();
     size_t total = 0;
-    for (int i = 0; i < info.index; ++i)
+    for (size_t i = 0; i < info.index; ++i)
         total += info.type_sizes[i];
     return total;
 }
@@ -67,7 +67,7 @@ struct cmd_info
     constexpr std::size_t total_size() const noexcept
     {
         size_t total = 0;
-        for (int i = 0; i < N; ++i)
+        for (size_t i = 0; i < N; ++i)
             total += field_size[i];
         return total;
     }
@@ -118,11 +118,52 @@ constexpr size_t datagram_size() noexcept
 template<typename Tuple, size_t N = datagram_size<Tuple>()>
 struct datagram
 {
-    char bytes[N];
+    using uchar = unsigned char;
+    uchar bytes[N]{};
+    size_t offset = 0;
+    template<typename Input>
+    uint append(Input value)
+    {
+        for (uint i = 0; i < sizeof(Input); i++, offset++)
+            bytes[offset] = uchar((value >> i*8) & 0xFF);
+        return sizeof(Input);
+    }
+    void print_seq()
+    {
+        for (uint i = 0; i < offset; i++)
+            printf(" %02x", bytes[i]);
+    }
 };
-template<typename Tuple, int N = datagram_size<Tuple>()>
-constexpr auto tuple_to_byte_array(const Tuple& tuple)
--> decltype(datagram<Tuple, N>{})
+
+template <size_t N, typename Tuple,
+          typename... Args>
+constexpr auto append(Args&&... args)
 {
-    return {};
+    datagram<Tuple, N> cmd{};
+    cmd.offset = 0;
+    size_t sz[] = { cmd.append(args)... };(void)sz;
+    return cmd;
+}
+
+template <size_t N, typename... Flds, size_t... I>
+constexpr auto tuple_to_datagram_impl(const std::tuple<Flds...> & tpl,
+                            std::index_sequence<I...>)
+{
+    using tuple_type = std::tuple<Flds...>;
+    return append<N, tuple_type>( std::get<I>(tpl)... );
+}
+
+template <size_t N, typename... Flds>
+constexpr auto  tuple_to_datagram_impl(const std::tuple<Flds...> & tpl)
+{
+    return tuple_to_datagram_impl<N>(tpl,
+                        std::make_index_sequence<sizeof...(Flds)>{});
+}
+
+template<size_t N, typename... Flds>
+constexpr auto tuple_to_datagram(const std::tuple<Flds...>& tuple)
+//-> decltype(datagram<Tuple, N>{})
+{
+    return tuple_to_datagram_impl<N>(tuple,
+                        std::make_index_sequence<sizeof...(Flds)>{});
 }
